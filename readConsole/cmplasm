@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ $1 == "help"  ]];
+then
+	echo "Compile Assembly or cmplasm for short is used to compile an assembly program by making use of nasm.";
+	echo "If you only specify de name of the program (with no extension), by default it will compile to x86 format.";
+	echo "Syntax:";
+	echo "	cmplasm [name_without_extension] -[nasm_format]"
+else
+	rm $1
+	nasm -f elf64 "$1.asm";
+	ld "$1.o" -o $1;
+	rm "$1.o"
+fi
