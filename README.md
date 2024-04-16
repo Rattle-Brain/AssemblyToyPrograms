@@ -21,8 +21,8 @@ To compile and run the assembly programs, follow these steps:
   ```
 3. Use the provided bash script `cmplasm` to compile the `.asm` program and link it using `ld`, creating an executable. For example:
   ```
-   ./cmplasm ./path/to/your_program
-   ```
+  ./cmplasm ./path/to/your_program
+  ```
 4. Execute the generated executable to run the program.
 
 ### BEWARE
