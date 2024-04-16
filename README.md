@@ -35,7 +35,7 @@ To compile and run the assembly programs, follow these steps:
 cmplasm readConsole/read.asm
 ```
 
-This will delete anything that matches the ```*read.\**```. Meaning your code is lost.
+This will delete anything that matches the ```read.* ```. Meaning your code is lost.
 
 ### Example DO
 
