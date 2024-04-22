@@ -31,7 +31,7 @@ _start:
 
 	; Now we transform the value introduced into a number
 	mov eax, 0
-	lea esi, buffer
+	lea edi, [buffer]
 	call atoi			; Call to atoi function
 
     ; Iterate and print "Iteration: n" in each iteration
@@ -82,6 +82,7 @@ loop_print:
 atoi:
     ; Initialize registers
     xor eax, eax       ; Clear eax (will store the result)
+	xor ecx, ecx
 
 convert_loop:
     ; Load the next character into al
@@ -98,7 +99,6 @@ convert_loop:
     imul eax, eax, 10
 
     ; Add the value of the current character to the result
-    add eax, eax
 	movzx ecx, al
     add eax, ecx
 
