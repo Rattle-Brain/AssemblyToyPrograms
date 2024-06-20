@@ -1,14 +1,86 @@
 #!/bin/bash
 
-if [[ $1 == "help"  ]];
-then
-	echo "Compile Assembly or cmplasm for short is used to compile an assembly program by making use of nasm.";
-	echo "If you only specify de name of the program (with no extension), by default it will compile to x86 format.";
-	echo "Syntax:";
-	echo "	cmplasm [name_without_extension] -[nasm_format]"
-else
-	rm $1
-	nasm -f $2 "$1.asm";
-	ld "$1.o" -o $1;
-	rm "$1.o"
+# Function to display help message
+show_help() {
+    echo "Compile Assembly (cmplasm) is used to compile an assembly program using NASM."
+    echo "If you specify only the name of the program (without extension), it defaults to x86 format."
+    echo ""
+    echo "Syntax:"
+    echo "  cmplasm [name_without_extension] [output_name] -f [nasm_format]"
+    echo ""
+    echo "Options:"
+    echo "  name_without_extension  The base name of your assembly file (without .asm)."
+    echo "  output_name             The desired name of the output executable."
+    echo "  -f nasm_format          Specifies the NASM format (e.g., elf32, elf64, win32, win64)."
+    echo ""
+    echo "Examples:"
+    echo "  cmplasm myprogram -f elf32"
+    echo "  cmplasm myprogram myoutput -f elf64"
+}
+
+# Default values
+format="elf32"   # Default NASM format
+output_name=""
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -f) format="$2"; shift 2;;
+        -h|--help) show_help; exit 0;;
+        *) 
+            if [[ -z "$input_name" ]]; then
+                input_name="$1"
+            else
+                output_name="$1"
+            fi
+            shift;;
+    esac
+done
+
+# Check if input_name is provided
+if [[ -z "$input_name" ]]; then
+    echo "Error: No input name provided."
+    show_help
+    exit 1
 fi
+
+# Remove .asm extension from input_name if present
+input_name="${input_name%.asm}"
+
+# Set default output_name if not provided
+if [[ -z "$output_name" ]]; then
+    output_name="$input_name"
+fi
+
+# Remove previous executable if exists
+if [[ -f "$output_name" ]]; then
+    rm "$output_name"
+fi
+
+# Compile assembly file
+nasm -f "$format" "$input_name.asm"
+if [[ $? -ne 0 ]]; then
+    echo "Error: NASM compilation failed."
+    exit 1
+fi
+
+# Link object file to create executable
+case "$format" in
+    elf32) ld -m elf_i386 "${input_name}.o" -o "$output_name";;
+    elf64) ld -m elf_x86_64 "${input_name}.o" -o "$output_name";;
+    win32) ld -m i386pe "${input_name}.o" -o "$output_name.exe";;
+    win64) ld -m i386pep "${input_name}.o" -o "$output_name.exe";;
+    macho32) ld -arch i386 "${input_name}.o" -o "$output_name";;
+    macho64) ld -arch x86_64 "${input_name}.o" -o "$output_name";;
+    *) echo "Unsupported format: $format"; exit 1;;
+esac
+
+if [[ $? -ne 0 ]]; then
+    echo "Error: Linking failed."
+    exit 1
+fi
+
+# Remove object file
+rm "${input_name}.o"
+
+echo "Compilation successful: ${output_name}"
