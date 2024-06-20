@@ -24,9 +24,9 @@ _start:
 int_to_str:
     ; Now the state of the stack is as follows:
     ;   ,_________________,
-    ;   |                 |  <-- esp points here
-    ;   |       ret       |
-    ;   |       eax       |
+    ;   |_________________|  <-- esp points here
+    ;   |_______ret_______|
+    ;   |_______eax_______|
     ;   |_________________|
 
     mov eax, [esp + 8]
@@ -34,7 +34,7 @@ int_to_str:
     ; Initialize buffer pointers
     mov edi, buffer + 11 ; Point to the end of the buffer
     mov byte [edi], 0    ; Null terminator
-    dec edi              ; Move back to the last character position
+    mov edi, buffer
 
     ; Handle zero explicitly
     test eax, eax
@@ -48,12 +48,13 @@ itoa_loop:
 
     ; Convert each digit to a character
     xor edx, edx         ; Clear edx for division
-    div dword [ten]      ; Divide eax by 10
+    mov esi, 10
+    div esi              ; Divide eax by 10
     add dl, '0'          ; Convert remainder to ASCII
     mov [edi], dl        ; Store ASCII character
-    dec edi              ; Move to the next character
+    inc edi              ; Move to the next character
     test eax, eax        ; Check if eax is zero
-    jnz itoa_loop  ; Continue if not zero
+    jnz itoa_loop        ; Continue if not zero
 
 
 itoa_loop_done:
