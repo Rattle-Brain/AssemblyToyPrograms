@@ -15,7 +15,7 @@ To compile and run the assembly programs, follow these steps:
   ```bash
   git clone https://github.com/Rattle-Brain/AssemblyToyPrograms.git
   ```
-### 3. Navigate to the directory of the program you want to run.
+### 2. Navigate to the directory of the program you want to run.
 
   ```bash
   cd AssemblyToyPrograms
