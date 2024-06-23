@@ -3,6 +3,7 @@ section .bss
 
 section .data
     ten dd 10
+    newline db 10
 
 section .text
     global _start
@@ -16,11 +17,18 @@ _start:
     add esp, 4              ; Remove eax from stack
 
     ; Print the number 4321
-    mov ecx, eax            ; Msg to print in ecx
     mov eax, 4              ; Syscall write
     mov ebx, 1              ; Stdout
+    mov ecx, buffer         ; Msg to print in ecx
     mov edx, 12             ; Len of buffer
     int 0x80                ; Execute interruption
+
+    ; Print a newline char
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, newline
+    mov edx, 1
+    int 0x80
 
     ; Exit program
     mov eax, 1
@@ -38,18 +46,16 @@ int_to_str:
     ;   |_______eax_______|
     ;   |_________________|
 
-    mov eax, [esp + 8]
+    mov eax, [esp + 4]
 
     ; Initialize buffer pointers
     mov edi, buffer + 11 ; Point to the end of the buffer
     mov byte [edi], 0    ; Null terminator
-    mov edi, buffer
 
     ; Handle zero explicitly
     test eax, eax
     jnz itoa_loop
     mov byte [edi], '0'
-    inc edi
     jmp itoa_loop_done
 
 
@@ -61,7 +67,7 @@ itoa_loop:
     div esi              ; Divide eax by 10
     add dl, '0'          ; Convert remainder to ASCII
     mov [edi], dl        ; Store ASCII character
-    inc edi              ; Move to the next character
+    dec edi              ; Move to the next character
     test eax, eax        ; Check if eax is zero
     jnz itoa_loop        ; Continue if not zero
 
@@ -69,8 +75,5 @@ itoa_loop:
 itoa_loop_done:
 
     ; Adjust edi to point to the beginning of the string
-    inc edi
-    mov esi, edi         ; Copy pointer to esi (for example, for further use)
 
-    ; Restore registers
     ret
