@@ -13,6 +13,15 @@ _start:
 
     call int_to_str         ; Call the function
 
+    add esp, 4              ; Remove eax from stack
+
+    ; Print the number 4321
+    mov ecx, eax            ; Msg to print in ecx
+    mov eax, 4              ; Syscall write
+    mov ebx, 1              ; Stdout
+    mov edx, 12             ; Len of buffer
+    int 0x80                ; Execute interruption
+
     ; Exit program
     mov eax, 1
     xor ebx, ebx
@@ -31,11 +40,16 @@ int_to_str:
 
     mov eax, [esp + 8]
 
+    ; Initialize buffer pointers
+    mov edi, buffer + 11 ; Point to the end of the buffer
+    mov byte [edi], 0    ; Null terminator
+    mov edi, buffer
+
     ; Handle zero explicitly
     test eax, eax
     jnz itoa_loop
     mov byte [edi], '0'
-    dec edi
+    inc edi
     jmp itoa_loop_done
 
 
@@ -59,5 +73,4 @@ itoa_loop_done:
     mov esi, edi         ; Copy pointer to esi (for example, for further use)
 
     ; Restore registers
-    pop eax
     ret
