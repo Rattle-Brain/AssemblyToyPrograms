@@ -1,5 +1,5 @@
 section .bss
-    buffer resb 12   ; Reserve 12 bytes for the string buffer (sufficient for a 32-bit integer + null terminator)
+    buffer_input resb 12   ; Reserve 12 bytes for the string buffer (sufficient for a 32-bit integer + null terminator)
 
 section .data
     ten dd 10
@@ -14,12 +14,12 @@ _start:
 
     call int_to_str         ; Call the function
 
-    add esp, 4              ; Remove eax from stack
+    add esp, 4              ; Remove eax from stack (no pop)
 
     ; Print the number 4321
     mov eax, 4              ; Syscall write
     mov ebx, 1              ; Stdout
-    mov ecx, buffer         ; Msg to print in ecx
+    mov ecx, buffer_input         ; Msg to print in ecx
     mov edx, 12             ; Len of buffer
     int 0x80                ; Execute interruption
 
@@ -49,7 +49,7 @@ int_to_str:
     mov eax, [esp + 4]
 
     ; Initialize buffer pointers
-    mov edi, buffer + 11 ; Point to the end of the buffer
+    mov edi, buffer_input + 11 ; Point to the end of the buffer
     mov byte [edi], 0    ; Null terminator
 
     ; Handle zero explicitly
@@ -73,7 +73,6 @@ itoa_loop:
 
 
 itoa_loop_done:
-
-    ; Adjust edi to point to the beginning of the string
+    ; Maybe I need to do something here.
 
     ret
