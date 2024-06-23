@@ -41,8 +41,8 @@ _start:
 int_to_str:
     ; Now the state of the stack is as follows:
     ;   ,_________________,
-    ;   |_________________|  <-- esp points here
-    ;   |_______ret_______|
+    ;   |_________________|  
+    ;   |_______ret_______|  <-- esp points here
     ;   |_______eax_______|
     ;   |_________________|
 
