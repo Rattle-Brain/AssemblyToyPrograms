@@ -48,11 +48,9 @@ atoi_done:
 loop_start:
     ; Print iteration number (EAX contains iteration)
     push ecx          		; Save loop counter
-    push ecx                ; Push twice. One as param to func, the other as index of loop
+    push edx                ; Now push the number to convert
 
     call int_to_str         ; Transform number into char[]
-        
-    add esp, 4              ; Delete top of stack
     
     ; Print buffer
     mov eax, 4
@@ -68,10 +66,11 @@ loop_start:
     mov edx, 1
     int 0x80
 
-    pop ecx                 ; Retrieve counter value
-    dec ecx                 ; Decrement
-    test ecx, ecx
-    jnz loop_start
+    pop edx                 ; Retrieve counter value
+    inc edx                 ; Decrement
+    pop ecx                 ; Retrieve loop limit
+    cmp ecx, edx
+    jne loop_start
 
     ; Exit
     mov eax, 1        		; System call number (sys_exit)
@@ -95,10 +94,10 @@ int_to_str:
 
     ; Clear buffer
 clear_buffer_loop:
-    mov ebx, buffer_output
-    dec edi
-    mov byte[edi], 0
-    cmp edi, ebx
+    mov ebx, buffer_output      ; Point to begin of buffer
+    dec edi                     ; Next byte
+    mov byte[edi], 0            ; Clear
+    cmp edi, ebx                
     jne clear_buffer_loop
 
 
