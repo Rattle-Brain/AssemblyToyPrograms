@@ -51,8 +51,8 @@ The repository is organized into folders, each containing a separate assembly pr
 - **helloWorld**: Prints "Hello World!" to the standard output
 - **readConsole**: Reads an input and prints it to stdout.
 - **loopAsm**: Loops 10 times printing ```Number: n```.
-- **userInputLoop**: Loops the amount of times specified by the user. DOESN'T WORK
-
+- **userInputLoop**: Loops the amount of times specified by the user.
+-**itoa_asm_input**: Basically itoa() in *C*
 Feel free to explore the folders and delve into the individual programs to see how they work and experiment with assembly programming yourself.
 
 ## License
