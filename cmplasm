@@ -76,8 +76,8 @@ case "$format" in
     elf64) ld -m elf_x86_64 "${input_name}.o" -o "$output_name";;
     win32) ld -m i386pe "${input_name}.o" -o "$output_name.exe";;
     win64) ld -m i386pep "${input_name}.o" -o "$output_name.exe";;
-    macho32) ld -arch i386 "${input_name}.o" -o "$output_name";;
-    macho64) ld -arch x86_64 "${input_name}.o" -o "$output_name";;
+    macho32) ld -arch i386 "${input_name}.o" -o "$output_name" -l System;;
+    macho64) ld -arch x86_64 "${input_name}.o" -o "$output_name" -l System;;
     *) echo "Unsupported format: $format"; exit 1;;
 esac
 
