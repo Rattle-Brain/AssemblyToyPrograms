@@ -6,9 +6,9 @@ section .data
     newline db 10
 
 section .text
-    global _start
+    global _main
 
-_start:
+_main:
     mov eax, 4321           ; Define a number
     push eax                ; Save the numner to the stack
 
@@ -36,7 +36,7 @@ _start:
     int 0x80
 
 
-; Definition function. Receives a number as a parameter and 
+; Definition function. Receives a number as a parameter and
 ; Transforms it into suitable text to print.
 int_to_str:
     ; Now the state of the stack is as follows:
