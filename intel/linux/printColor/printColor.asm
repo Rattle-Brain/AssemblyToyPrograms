@@ -1,4 +1,9 @@
-section .data
+section .data    
+    ; Prompt message
+    msg db "Enter a value: "
+    len equ $ - msg
+	blen equ 128
+    buffer times blen db 0
 
     ; Color prompt
     colorPrompt db "Enter a color:", 0xD, 0xA, " 1. Green", 0xD, 0xA, " 2. Red", 0xD, 0xA, " 3. Yellow", 0xD, 0xA, " 4. Blue", 0xD, 0xA, " 5. Magenta", 0xD, 0xA, " 6. Cyan", 0xD, 0xA, " 7. White", 0xD, 0xA, ""
@@ -6,13 +11,8 @@ section .data
 
     ; Color buffer
     colorBuffer times 1 db 0
-    colorBufferLen equ $ - colorBuffer
-    
-    ; Prompt message
-    msg db "Enter a value: "
-    len equ $ - msg
-	blen equ 128
-    buffer times blen db 0
+    colorBufferLen equ 1
+
 
     ; Colors
     red db 0x1B, "[0;31m", 0
@@ -84,7 +84,7 @@ printInput:
     ; Print the message to console
     mov eax, 4 		            ; System call for writing to console
     mov ecx, buffer
-    mov edx, len           ; Length of buffer
+    mov edx, eax           ; Length of input
     int 0x80
 
     ; Print the color to console
